@@ -13,8 +13,8 @@ class ParseExcel():
         datalist.pop(0)
         return datalist
 
-if  __name__ == '__main__':
-    excel_path = './../data/login_excel.xls'
-    sheetName = 'user'
-    parse = ParseExcel(excel_path,sheetName)
-    print(parse.getDataFromSheet())
+# if  __name__ == '__main__':
+#     excel_path = './../data/login_excel.xlsx'
+#     sheetName = 'user'
+#     parse = ParseExcel(excel_path,sheetName)
+#     print(parse.getDataFromSheet())
