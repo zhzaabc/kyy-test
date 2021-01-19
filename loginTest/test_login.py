@@ -1,42 +1,39 @@
-import time,pytest,allure,ddt
+import time,pytest,allure,requests
 from selenium import webdriver
 from utils.excel_read import ParseExcel
-from ddt import ddt,data,unpack
 
 excel_path = './../data/login_excel.xlsx'
 sheetName = 'user'
-excel = ParseExcel(excel_path,sheetName)
+excel_login = ParseExcel(excel_path, sheetName)
+test_url = "https://www.kuaixuezaixian.com/"
+headers = {'content-type': "application/json", 'charset': "UTF-8"}
 @allure.feature('测试登录用例')
-@ddt
 class Test_login(object):
 
     @allure.story('打开首页地址')
     @allure.severity('blocker')
-    @data(*excel.getDataFromSheet())
-    def test_openUrl(self,data):
-        self.driver = webdriver.Chrome()
-        self.driver.get("https://www.kuaixuezaixian.com/")
-        self.driver.maximize_window()
-        time.sleep(10)
-        self.driver.find_element_by_class_name("login").click()
-        self.driver.find_element_by_xpath("//*[@id='__layout']/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/ul/li[2]/span").click()
-        time.sleep(10)
-        print(data)
+    @pytest.mark.parametrize('user_name,user_pwd',[(excel_login.getDataFromSheet()[0][0],excel_login.getDataFromSheet()[0][1])])
+    def test_openUrl(self,user_name,user_pwd):
+        # self.driver = webdriver.Chrome()
+        # self.driver.get(test_url)
+        # self.driver.maximize_window()
+        # time.sleep(10)
+        # self.driver.find_element_by_class_name("login").click()
+        # self.driver.find_element_by_xpath("//*[@id='__layout']/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div[2]/ul/li[2]/span").click()
+        # self.driver.find_elements_by_tag_name("input")[0].clear()
+        # self.driver.find_elements_by_tag_name("input")[0].send_keys(user_name)
+        # self.driver.find_elements_by_tag_name("input")[1].clear()
+        # self.driver.find_elements_by_tag_name("input")[1].send_keys(user_pwd)
+        # time.sleep(5)
+        # self.driver.find_element_by_class_name("login-submit-btn").click()
+        #####登录请求接口
+        requests_login = requests.post(test_url+'api/v1/login/password',json={'username':str(user_name),"password":str(user_pwd)},headers=headers )
+        # assert requests_login.status_code == 200
+        pytest.main(['-s', '-v', '--alluredir', './../report/html/allure-results'])
 
-    # @allure.story('进入登录页面')
-    # @allure.severity('blocker')
-    # def test_login_page(self):
-    #     driver = webdriver.Chrome()
-    #     #driver.find_element("class","login").click()
-
-    @pytest.fixture(scope='module')
-    def login_t(request1):
-        user=request1.param['user']
-        pwd = request1.param['password']
-        print('\n用户名:%s,密码:%s'%(user,pwd))
-        if pwd:
-            return True
-        else:
-            return False
-
+# if __name__ == '__main__':
+#     pytest.main(['-s','-v','--alluredir','./../report/html/allure-results'])
+    # def test_assert(self,status_code):
+    #     if status_code == 200:
+    #         assert
 
