@@ -1,4 +1,5 @@
-import pytest,allure,os,time,datetime
+import pytest,allure,os,time,datetime,json
+from playwright.sync_api import Page
 from selenium import webdriver
 from utils.excel_read import ParseExcel
 
@@ -58,7 +59,6 @@ if __name__ == '__main__':
     # pytest.main(['-s', '-q', 'query.py', '--alluredir', 'Reports'])
     #os.system('allure generate report{0}/ -o report{0}/html'.format(now))
     # os.system('allure generate report/report_data -o report/html --clean')
+    storage = Page.context.storage_state()
+    os.environ["storage"] = json.dumps(storage)
     os.system('allure serve report/report_data')
-
-
-
