@@ -1,0 +1,16 @@
+FROM registry.cn-beijing.aliyuncs.com/kaoyaya-micro/python-base-image
+
+#安装python库
+COPY requirements.txt /app/requirements.txt
+RUN pip3 install  -i http://mirrors.aliyun.com/pypi/simple/  -r /app/requirements.txt --trusted-host mirrors.aliyun.com
+
+#复制项目文件
+COPY . /app
+
+#清除文件
+RUN rm /app/Python-3.7.4.tgz
+RUN rm /app/utils/webdriver/google-chrome.deb
+RUN rm /app/utils/webdriver/chromedriver_linux64
+RUN rm /app/utils/webdriver/chromedriver_mac64
+
+CMD ["/usr/local/bin/python3","/app/apply_exam.py"]
